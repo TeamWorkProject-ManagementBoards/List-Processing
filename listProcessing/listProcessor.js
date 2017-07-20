@@ -1,32 +1,71 @@
 function listProcessor(input) {
-    let string = input.shift();
-    console.log(string);
+    let list = input.shift().split(" ");
+    console.log(list.join(" "));
 
     for (let command of input) {
         let tokens = command.split(/\s+/g);
-        let commandProperties = tokens.slice(1);
-
-        processCommand(tokens[0], commandProperties);
+        processCommand(tokens[0], tokens);
     }
 
     function processCommand(command, tokens) {
+        let index;
+
         switch (command) {
-            case 'append': 
-                string = string + ' ' + tokens;
-                console.log(string);
+            case 'append':
+                list.push(tokens[1]);
+                console.log(list.join(" "));
                 break;
             case 'prepend':
-                string = tokens + ' ' + string;
-                console.log(string);
+                list.unshift(tokens[1]);
+                console.log(list.join(" "));
                 break;
             case 'reverse':
-                string = string.split(' ').reverse().join(' ');
-                console.log(string);
+                list = list.reverse();
+                console.log(list.join(" "));
+                break;
+            case 'insert':
+                index = Number(tokens[1]);
+                let stringToInsert = tokens[2];
+
+                if (index < 0 || index >= list.length) {
+                    console.log(`Error: invalid index ${index}`);
+                    break;
+                }
+
+                list.splice(index, 0, stringToInsert);
+                console.log(list.join(" "));
+                break;
+            case 'delete':
+                index = Number(tokens[1]);
+
+                if (index < 0 || index >= list.length) {
+                    console.log(`Error: invalid index ${index}`);
+                    break;
+                }
+
+                list.splice(index, 1);
+                console.log(list.join(" "));
+                break;
+            case 'roll':
+                if (tokens[1] === 'left') {
+                    let firstItem = list.shift();
+                    list.push(firstItem);
+                    console.log(list.join(" "));
+                    break;
+                }
+
+                //Here add the roll right function
                 break;
             case 'end':
                 console.log('Finished');
                 break;
-            //Here we make cases for every command
         }
     }
 }
+
+listProcessor([
+    'alpha beta gamma',
+    'reverse',
+    'append Gosho',
+    'roll left'
+]);
