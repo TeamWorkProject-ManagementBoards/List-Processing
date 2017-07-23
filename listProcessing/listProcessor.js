@@ -5,8 +5,13 @@ function listProcessor(input) {
     for (let command of input) {
         let tokens = command.split(/\s+/g);
         let commandProperties = tokens.slice(1);
-
-        processCommand(tokens[0], commandProperties);
+        try {
+            let result = processCommand(tokens[0], commandProperties);
+            console.log(result);
+        }
+        catch(err) {
+            console.log(err.message)
+        }
     }
 
     function processCommand(command, tokens) {
@@ -15,96 +20,87 @@ function listProcessor(input) {
         switch (command) {
             case 'append':
                 if (tokens.length !== 1 || tokens[0].trim() === ''){
-                    console.log('Error: invalid command parameters')
+                    throw new Error('Error: invalid command parameters');
                 }
 
                 list.push(tokens[0]);
-                console.log(list.join(" "));
-                break;
+
+                return list.join(" ");
             case 'prepend':
                 if (tokens.length !== 1 || tokens[0].trim() === ''){
-                    console.log('Error: invalid command parameters')
+                    throw new Error('Error: invalid command parameters');
                 }
 
                 list.unshift(tokens[0]);
-                console.log(list.join(" "));
-                break;
+
+                return list.join(" ");
             case 'reverse':
                 if (tokens.length !== 0){
-                    console.log('Error: invalid command parameters')
-                    break;
+                    throw new Error('Error: invalid command parameters');
                 }
 
                 list = list.reverse();
-                console.log(list.join(" "));
-                break;
+
+                return list.join(" ");
             case 'insert':
                 if (tokens.length !== 2 || !Number.isInteger(Number.parseInt(tokens[0])) || tokens[1].trim() === ''){
-                    console.log('Error: invalid command parameters');
-                    break;
+                    throw new Error('Error: invalid command parameters');
                 }
 
                 index = Number(tokens[0]);
                 let stringToInsert = tokens[1];
 
                 if (index < 0 || index >= list.length) {
-                    console.log(`Error: invalid index ${index}`);
-                    break;
+                    throw new Error(`Error: invalid index ${index}`);
                 }
 
                 list.splice(index, 0, stringToInsert);
-                console.log(list.join(" "));
-                break;
+
+                return list.join(" ");
             case 'delete':
                 if (tokens.length !== 1 || !Number.isInteger(Number.parseInt(tokens[0]))){
-                    console.log('Error: invalid command parameters');
-                    break;
+                    throw new Error('Error: invalid command parameters');
                 }
 
                  index = Number(tokens[0]);
 
                 if (index < 0 || index >= list.length) {
-                    console.log(`Error: invalid index ${index}`);
-                    break;
+                    throw new Error(`Error: invalid index ${index}`);
                 }
 
                 list.splice(index, 1);
-                console.log(list.join(" "));
-                break;
+
+                return list.join(" ");
             case 'roll':
-                //CHECKKKKK
                 if(tokens.length !== 1 || !(tokens[0] === 'left' || tokens[0] === 'right')){
-                    console.log('Error: invalid command parameters');
-                    break;
+                    throw new Error('Error: invalid command parameters');
                 }
                 if (tokens[0] === 'left') {
                     let firstItem = list.shift();
                     list.push(firstItem);
-                    console.log(list.join(" "));
-                    break;
+
+                    return list.join(" ");
                 } else if (tokens[0] === 'right'){
                     let lastItem = list.pop();
                     list.unshift(lastItem);
-                    console.log(list.join(" "));
+
+                    return list.join(" ");
                 }
 
                 break;
             case 'sort':
                 if(tokens.length !== 0){
-                    console.log('Error: invalid command parameters');
-                    break;
+                    throw new Error('Error: invalid command parameters');
                 }
 
                 list = list.sort(function(a,b){
                     return a.localeCompare(b);
                 });
 
-                console.log(list.join(" "));
-                break;
+                return list.join(" ");
             case 'count':
                 if(tokens.length !== 1 || tokens[0] === ''){
-                    console.log('Error: invalid command parameters')
-                    break;
+                    throw new Error('Error: invalid command parameters');
                 }
 
                 let counter = 0;
@@ -114,18 +110,15 @@ function listProcessor(input) {
                     }
                 }
 
-                console.log(counter);
-                break;
+                return counter;
             case 'end':
                 if (tokens.length !== 0){
-                    console.log('Error: invalid command parameters');
-                    break;
+                    throw new Error('Error: invalid command parameters');
                 }
 
-                console.log('Finished');
-                break;
+                return 'Finished';
             default:
-                console.log('Error: invalid command');
+                throw new Error('Error: invalid command');
         }
     }
 }
