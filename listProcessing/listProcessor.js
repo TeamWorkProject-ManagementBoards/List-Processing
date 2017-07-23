@@ -52,10 +52,28 @@ function listProcessor(input) {
                     list.push(firstItem);
                     console.log(list.join(" "));
                     break;
+                } else if (tokens[1] === 'right'){
+                    let lastItem = list.pop();
+                    list.unshift(lastItem);
+                    console.log(list.join(" "));
+                }
+                break;
+            case 'sort':
+                list = list.sort(function(a,b){
+                    return a.localeCompare(b);
+                });
+
+                console.log(list.join(" "));
+                break;
+            case 'count':
+                let counter = 0;
+                for (let item of list) {
+                    if (item === tokens[1]){
+                        counter++;
+                    }
                 }
 
-                //Here add the roll right function
-                break;
+                console.log(counter);
             case 'end':
                 console.log('Finished');
                 break;
@@ -64,8 +82,11 @@ function listProcessor(input) {
 }
 
 listProcessor([
-    'alpha beta gamma',
+    'alpha beta gamma gamma',
     'reverse',
     'append Gosho',
-    'roll left'
+    'roll right',
+    'sort',
+    'count gamma',
+    'insert 4 ins'
 ]);
